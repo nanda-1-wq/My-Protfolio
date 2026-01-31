@@ -1,12 +1,10 @@
 // Mobile menu toggle
 let menuIcon = document.querySelector('#menu-icon');
 let navbar = document.querySelector('.navbar');
-
 menuIcon.onclick = () => {
     menuIcon.classList.toggle('bx-x');
     navbar.classList.toggle('active');
 };
-
 // Close menu when clicking on a link
 navbar.querySelectorAll('a').forEach(link => {
     link.onclick = () => {
@@ -14,13 +12,11 @@ navbar.querySelectorAll('a').forEach(link => {
         navbar.classList.remove('active');
     };
 });
-
 // Close menu when scrolling
 window.onscroll = () => {
     menuIcon.classList.remove('bx-x');
     navbar.classList.remove('active');
 };
-
 // Typed.js initialization
 document.addEventListener('DOMContentLoaded', function() {
     const typed = new Typed('.multiple-text', {
@@ -31,17 +27,14 @@ document.addEventListener('DOMContentLoaded', function() {
         loop: true,
     });
 });
-
 // Dark mode toggle
 let darkModeToggle = document.querySelector('#dark-mode-toggle');
-
 // Check for saved dark mode preference
 if (localStorage.getItem('dark-mode') === 'enabled') {
     document.body.classList.add('dark-mode');
     darkModeToggle.classList.remove('bx-moon');
     darkModeToggle.classList.add('bx-sun');
 }
-
 darkModeToggle.onclick = () => {
     document.body.classList.toggle('dark-mode');
     
@@ -55,7 +48,6 @@ darkModeToggle.onclick = () => {
         localStorage.setItem('dark-mode', 'disabled');
     }
 };
-
 // Smooth scroll for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
@@ -73,7 +65,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
-
 // Active nav link on scroll
 window.addEventListener('scroll', () => {
     let sections = document.querySelectorAll('section');
@@ -96,4 +87,22 @@ window.addEventListener('scroll', () => {
             link.classList.add('active');
         }
     });
+});
+
+// Skills progress bar animation
+const skillProgressObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const progressBar = entry.target.querySelector('.skill-progress');
+            const width = progressBar.getAttribute('data-width');
+            progressBar.style.width = width + '%';
+            skillProgressObserver.unobserve(entry.target);
+        }
+    });
+}, {
+    threshold: 0.1
+});
+
+document.querySelectorAll('.skill-card').forEach(card => {
+    skillProgressObserver.observe(card);
 });
