@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow - Advanced Task Management</title>
+    <link rel="stylesheet" href="task-ma.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <i class='bx bxs-check-square'></i>
+                <span>TaskFlow</span>
+            </div>
+
+            <div class="header-center">
+                <div class="date-display" id="dateDisplay"></div>
+                <div class="task-stats">
+                    <span class="stat">
+                        <i class='bx bx-list-check'></i>
+                        <strong id="totalTasks">0</strong> Tasks
+                    </span>
+                    <span class="stat">
+                        <i class='bx bx-time'></i>
+                        <strong id="totalHours">0h</strong> Tracked
+                    </span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class='bx bx-moon'></i>
+                </button>
+                <button class="stats-btn" id="statsBtn">
+                    <i class='bx bx-bar-chart'></i>
+                </button>
+                <button class="new-task-btn" id="newTaskBtn">
+                    <i class='bx bx-plus'></i> New Task
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar" id="sidebar">
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active" data-filter="all">
+                <i class='bx bx-list-ul'></i>
+                <span>All Tasks</span>
+                <span class="badge" id="allTasksBadge">0</span>
+            </a>
+            <a href="#" class="nav-item" data-filter="today">
+                <i class='bx bx-calendar-today'></i>
+                <span>Today</span>
+                <span class="badge" id="todayBadge">0</span>
+            </a>
+            <a href="#" class="nav-item" data-filter="upcoming">
+                <i class='bx bx-calendar-check'></i>
+                <span>Upcoming</span>
+                <span class="badge" id="upcomingBadge">0</span>
+            </a>
+            <a href="#" class="nav-item" data-filter="completed">
+                <i class='bx bx-check-circle'></i>
+                <span>Completed</span>
+                <span class="badge" id="completedBadge">0</span>
+            </a>
+            <a href="#" class="nav-item" data-filter="overdue">
+                <i class='bx bx-time-five'></i>
+                <span>Overdue</span>
+                <span class="badge badge-danger" id="overdueBadge">0</span>
+            </a>
+        </nav>
+
+        <div class="nav-divider"></div>
+
+        <div class="priority-filter">
+            <h4>Filter by Priority</h4>
+            <div class="priority-options">
+                <label class="checkbox-label">
+                    <input type="checkbox" value="high" class="priority-checkbox" checked>
+                    <span class="priority-dot high"></span>
+                    <span>High</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" value="medium" class="priority-checkbox" checked>
+                    <span class="priority-dot medium"></span>
+                    <span>Medium</span>
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" value="low" class="priority-checkbox" checked>
+                    <span class="priority-dot low"></span>
+                    <span>Low</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="nav-divider"></div>
+
+        <div class="categories">
+            <h4>Categories</h4>
+            <div class="category-list" id="categoryList"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Search and Filter Bar -->
+        <div class="search-bar">
+            <div class="search-wrapper">
+                <i class='bx bx-search'></i>
+                <input type="text" id="searchInput" placeholder="Search tasks...">
+            </div>
+            <select id="sortSelect" class="sort-select">
+                <option value="date">Sort by Date</option>
+                <option value="priority">Sort by Priority</option>
+                <option value="name">Sort by Name</option>
+                <option value="time">Sort by Time Spent</option>
+            </select>
+            <button class="view-toggle" id="viewToggle">
+                <i class='bx bx-layout'></i>
+            </button>
+        </div>
+
+        <!-- Tasks Container -->
+        <div class="tasks-container" id="tasksContainer">
+            <!-- Tasks will be loaded here -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <i class='bx bx-inbox'></i>
+            <h3>No tasks here</h3>
+            <p>Create a new task to get started</p>
+            <button class="btn btn-primary" id="emptyNewTaskBtn">
+                <i class='bx bx-plus'></i> New Task
+            </button>
+        </div>
+    </main>
+
+    <!-- Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content task-modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">New Task</h2>
+                <button class="close-modal" id="closeTaskModal">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+
+            <form class="task-form" id="taskForm">
+                <div class="form-group">
+                    <label>Task Title *</label>
+                    <input type="text" id="taskTitle" placeholder="Enter task title" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="taskDescription" placeholder="Add task description..." rows="3"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" id="taskCategory" placeholder="e.g., Work, Personal">
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="taskPriority" required>
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input type="date" id="taskDueDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Estimated Time (hours)</label>
+                        <input type="number" id="taskEstimatedTime" placeholder="0" min="0" step="0.5">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Assign To (Team Members)</label>
+                    <div class="assignee-selector">
+                        <div class="assignee-input">
+                            <input type="text" id="assigneeInput" placeholder="Search team members...">
+                            <div class="assignee-suggestions" id="assigneeSuggestions" style="display: none;"></div>
+                        </div>
+                        <div class="assigned-members" id="assignedMembers"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Tags</label>
+                    <div class="tags-input">
+                        <input type="text" id="tagsInput" placeholder="Add tags (press Enter)">
+                        <div class="tags-list" id="tagsList"></div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Task Details Modal -->
+    <div class="modal" id="taskDetailsModal">
+        <div class="modal-content task-details-modal">
+            <button class="close-modal" id="closeDetailsModal">
+                <i class='bx bx-x'></i>
+            </button>
+            <div class="task-details-content" id="taskDetailsContent">
+                <!-- Task details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Time Tracker Modal -->
+    <div class="modal" id="timeTrackerModal">
+        <div class="modal-content time-tracker-modal">
+            <div class="modal-header">
+                <h2>Time Tracker</h2>
+                <button class="close-modal" id="closeTimeTracker">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+
+            <div class="time-tracker-content">
+                <div class="timer-display" id="timerDisplay">
+                    <div class="timer-circle">
+                        <span class="time" id="timerTime">00:00:00</span>
+                    </div>
+                </div>
+
+                <div class="timer-controls">
+                    <button class="btn btn-secondary" id="startBtn">
+                        <i class='bx bx-play'></i> Start
+                    </button>
+                    <button class="btn btn-secondary" id="pauseBtn" style="display: none;">
+                        <i class='bx bx-pause'></i> Pause
+                    </button>
+                    <button class="btn btn-secondary" id="resetBtn">
+                        <i class='bx bx-redo'></i> Reset
+                    </button>
+                    <button class="btn btn-primary" id="saveTimeBtn">
+                        <i class='bx bx-check'></i> Save
+                    </button>
+                </div>
+
+                <div class="time-logs" id="timeLogs"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Modal -->
+    <div class="modal" id="statsModal">
+        <div class="modal-content stats-modal">
+            <div class="modal-header">
+                <h2>Statistics</h2>
+                <button class="close-modal" id="closeStats">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class='bx bx-list-check'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="statTotalTasks">0</div>
+                        <div class="stat-label">Total Tasks</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class='bx bx-check-circle'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="statCompletedTasks">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class='bx bx-time'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="statTotalHours">0h</div>
+                        <div class="stat-label">Time Tracked</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class='bx bx-trending-up'></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="statCompletionRate">0%</div>
+                        <div class="stat-label">Completion Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-charts">
+                <div class="chart-container">
+                    <h3>Priority Distribution</h3>
+                    <div class="priority-chart" id="priorityChart"></div>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Category Breakdown</h3>
+                    <div class="category-chart" id="categoryChart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content confirm-modal">
+            <div class="confirm-icon">
+                <i class='bx bx-question-mark'></i>
+            </div>
+            <h2 id="confirmTitle">Confirm Action</h2>
+            <p id="confirmMessage">Are you sure?</p>
+            <div class="confirm-actions">
+                <button class="btn btn-secondary" id="confirmCancel">Cancel</button>
+                <button class="btn btn-danger" id="confirmOk">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="task-ma.js"></script>
+</body>
+</html>

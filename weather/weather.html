@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherHub - Advanced Weather Dashboard</title>
+    <link rel="stylesheet" href="weather.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <i class='bx bxs-cloud-rain'></i>
+                <span>WeatherHub</span>
+            </div>
+
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <i class='bx bx-search'></i>
+                    <input type="text" id="searchInput" placeholder="Search city or location...">
+                    <div class="search-suggestions" id="searchSuggestions"></div>
+                </div>
+                <button class="search-btn" id="searchBtn">
+                    <i class='bx bx-search-alt'></i>
+                </button>
+            </div>
+
+            <div class="header-actions">
+                <button class="favorites-btn" id="favoritesBtn">
+                    <i class='bx bx-heart'></i>
+                    <span class="favorites-count" id="favoritesCount">0</span>
+                </button>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class='bx bx-moon'></i>
+                </button>
+                <button class="menu-btn" id="menuBtn">
+                    <i class='bx bx-menu'></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Favorites</h3>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class='bx bx-x'></i>
+            </button>
+        </div>
+
+        <div class="favorites-list" id="favoritesList">
+            <p class="empty-message">No favorites yet</p>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section">
+            <h4>Units</h4>
+            <div class="unit-toggles">
+                <label class="radio-label">
+                    <input type="radio" name="units" value="metric" checked>
+                    <span>°C, km/h</span>
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="units" value="imperial">
+                    <span>°F, mph</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section">
+            <h4>Alerts & Notifications</h4>
+            <label class="checkbox-label">
+                <input type="checkbox" id="alertsToggle" checked>
+                <span>Enable Alerts</span>
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" id="notificationsToggle" checked>
+                <span>Show Notifications</span>
+            </label>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Current Weather Section -->
+        <section class="current-weather" id="currentWeather">
+            <div class="weather-card main-card">
+                <div class="weather-header">
+                    <div class="location-info">
+                        <h1 class="location-name" id="locationName">Loading...</h1>
+                        <p class="location-details" id="locationDetails"></p>
+                        <p class="last-updated" id="lastUpdated"></p>
+                    </div>
+                    <button class="favorite-toggle" id="favoritePrimaryBtn">
+                        <i class='bx bx-heart'></i>
+                    </button>
+                </div>
+
+                <div class="weather-main">
+                    <div class="weather-icon" id="weatherIcon">
+                        <i class='bx bxs-sun'></i>
+                    </div>
+                    <div class="weather-info">
+                        <span class="temperature" id="temperature">--</span>
+                        <p class="weather-description" id="weatherDescription">-</p>
+                    </div>
+                </div>
+
+                <div class="weather-details-grid">
+                    <div class="detail-item">
+                        <i class='bx bx-droplet'></i>
+                        <div class="detail-content">
+                            <span class="detail-label">Humidity</span>
+                            <span class="detail-value" id="humidity">--%</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <i class='bx bx-wind'></i>
+                        <div class="detail-content">
+                            <span class="detail-label">Wind Speed</span>
+                            <span class="detail-value" id="windSpeed">--</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <i class='bx bx-tachometer'></i>
+                        <div class="detail-content">
+                            <span class="detail-label">Pressure</span>
+                            <span class="detail-value" id="pressure">-- mb</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <i class='bx bx-show'></i>
+                        <div class="detail-content">
+                            <span class="detail-label">Visibility</span>
+                            <span class="detail-value" id="visibility">--</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <i class='bx bx-up-arrow-alt'></i>
+                        <div class="detail-content">
+                            <span class="detail-label">Feels Like</span>
+                            <span class="detail-value" id="feelsLike">--</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <i class='bx bx-cloud'></i>
+                        <div class="detail-content">
+                            <span class="detail-label">Cloud Cover</span>
+                            <span class="detail-value" id="cloudCover">--%</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <i class='bx bx-sun'></i>
+                        <div class="detail-content">
+                            <span class="detail-label">Sunrise</span>
+                            <span class="detail-value" id="sunrise">--:--</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <i class='bx bx-moon'></i>
+                        <div class="detail-content">
+                            <span class="detail-label">Sunset</span>
+                            <span class="detail-value" id="sunset">--:--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uv-section">
+                    <div class="uv-header">
+                        <i class='bx bx-radiation'></i>
+                        <span>UV Index</span>
+                    </div>
+                    <div class="uv-bar">
+                        <div class="uv-indicator" id="uvIndicator" style="width: 0%"></div>
+                    </div>
+                    <span class="uv-value" id="uvIndex">-</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alerts Section -->
+        <section class="alerts-section" id="alertsSection" style="display: none;">
+            <h2>Weather Alerts</h2>
+            <div class="alerts-container" id="alertsContainer"></div>
+        </section>
+
+        <!-- Hourly Forecast Section -->
+        <section class="hourly-section">
+            <h2>Hourly Forecast</h2>
+            <div class="hourly-forecast" id="hourlyForecast"></div>
+        </section>
+
+        <!-- 7-Day Forecast Section -->
+        <section class="forecast-section">
+            <h2>7-Day Forecast</h2>
+            <div class="forecast-grid" id="forecastGrid"></div>
+        </section>
+
+        <!-- Historical Data Section -->
+        <section class="historical-section">
+            <div class="section-header">
+                <h2>Historical Data</h2>
+                <div class="historical-controls">
+                    <button class="btn btn-secondary" id="prev7DaysBtn">
+                        <i class='bx bx-chevron-left'></i> Previous 7 Days
+                    </button>
+                    <span class="date-range" id="dateRange">Last 7 days</span>
+                    <button class="btn btn-secondary" id="next7DaysBtn">
+                        Next 7 Days <i class='bx bx-chevron-right'></i>
+                    </button>
+                </div>
+            </div>
+            <div class="historical-chart" id="historicalChart"></div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section">
+            <div class="chart-card">
+                <h3>Temperature Trend</h3>
+                <canvas id="temperatureChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Precipitation</h3>
+                <canvas id="precipitationChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <!-- Favorites Modal -->
+    <div class="modal" id="favoritesModal">
+        <div class="modal-content favorites-modal">
+            <div class="modal-header">
+                <h2>My Favorite Locations</h2>
+                <button class="close-modal" id="closeFavoritesModal">
+                    <i class='bx bx-x'></i>
+                </button>
+            </div>
+
+            <div class="favorites-grid" id="favoritesGrid">
+                <!-- Favorites will be loaded here -->
+            </div>
+
+            <div class="empty-favorites" id="emptyFavorites" style="display: none;">
+                <i class='bx bx-heart'></i>
+                <p>No favorites yet. Add a location to your favorites to view it here.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weather Details Modal -->
+    <div class="modal" id="detailsModal">
+        <div class="modal-content details-modal">
+            <button class="close-modal" id="closeDetailsModal">
+                <i class='bx bx-x'></i>
+            </button>
+            <div class="details-content" id="detailsContent"></div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script src="weather.js"></script>
+</body>
+</html>
